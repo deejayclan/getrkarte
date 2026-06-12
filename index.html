@@ -2,1296 +2,1303 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes, maximum-scale=1.0, user-scalable=no">
-    <title>CLUB, LOUNGE, COCKTAIL BAR DIAMOND · Getränkekarte</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Bild-Rotations-Editor</title>
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            transition: background-color 0.3s ease, border-color 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
         }
-
-        /* Light Mode */
-        :root {
-            --bg-primary: #f5f5f7;
-            --bg-card: #ffffff;
-            --bg-category: #2c3e2f;
-            --text-primary: #1a1a2e;
-            --text-secondary: #666666;
-            --text-muted: #888888;
-            --border-color: #e0e0e0;
-            --border-light: #eeeeee;
-            --accent: #1a1a2e;
-            --accent-light: #e8e8e8;
-            --btn-bg: #f0f0f0;
-            --cart-bg: #2c3e2f;
-            --cart-text: #ffffff;
-            --toast-bg: #2d6a4f;
-            --toast-text: #ffffff;
-            --badge-bg: #e8e8e8;
-            --select-bg: #f0f0f0;
-            --delete-bg: #dc3545;
-            --delete-hover: #c82333;
-            --admin-bg: #f0f0f0;
-            --category-text: #ffffff;
-            --sort-bg: #e9ecef;
-            --reset-btn: #dc3545;
-            --reset-btn-hover: #c82333;
-            --order-btn: #28a745;
-            --order-btn-hover: #218838;
-        }
-
-        /* Dark Mode */
-        body.dark {
-            --bg-primary: #000000;
-            --bg-card: #0a0a0a;
-            --bg-category: #1a1a2e;
-            --text-primary: #ffffff;
-            --text-secondary: #aaaaaa;
-            --text-muted: #777777;
-            --border-color: #2a2a2a;
-            --border-light: #1f1f1f;
-            --accent: #ffffff;
-            --accent-light: #2a2a2a;
-            --btn-bg: #1a1a1a;
-            --cart-bg: #1a1a2e;
-            --cart-text: #ffffff;
-            --toast-bg: #2d6a4f;
-            --toast-text: #ffffff;
-            --badge-bg: #1a1a1a;
-            --select-bg: #1a1a1a;
-            --delete-bg: #dc3545;
-            --delete-hover: #b02a37;
-            --admin-bg: #1a1a1a;
-            --category-text: #ffffff;
-            --sort-bg: #2a2a2a;
-            --reset-btn: #dc3545;
-            --reset-btn-hover: #b02a37;
-            --order-btn: #28a745;
-            --order-btn-hover: #218838;
-        }
-
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            padding-bottom: 80px;
-            touch-action: pan-x pan-y;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            padding: 20px;
+            min-height: 100vh;
         }
-
-        /* Header */
-        .header {
-            background: var(--bg-card);
-            padding: 16px 12px;
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
             text-align: center;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
-        .logo { font-size: 9px; letter-spacing: 3px; color: var(--text-muted); margin-bottom: 4px; }
-        .header h1 { font-size: 24px; letter-spacing: 2px; font-weight: 300; }
-        .header h1 span { font-weight: 700; }
-        .header .subtitle { font-size: 8px; opacity: 0.5; margin-top: 4px; }
-
-        /* Kategorie-Navigation */
-        .categories-wrapper {
-            background: var(--bg-category);
-            transition: all 0.3s ease;
-        }
-        .categories {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: 16px;
-        }
-        .categories-wrapper.hide-categories .categories {
-            display: none;
-        }
-        .categories-wrapper.hide-categories .single-category-mode {
-            display: block;
-        }
-        .single-category-mode {
-            display: none;
-            padding: 16px;
+        
+        .description {
             text-align: center;
+            margin-bottom: 30px;
+            color: #7f8c8d;
+            font-size: 1.1rem;
         }
-        .show-all-categories-btn {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 12px 20px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            color: var(--category-text);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.2s;
-            width: 100%;
-        }
-        .show-all-categories-btn:active {
-            transform: scale(0.97);
-            background: rgba(255,255,255,0.3);
-        }
-        .category-btn {
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.25);
-            padding: 12px 8px;
-            border-radius: 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            color: var(--category-text);
+        
+        .app-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s ease;
+            flex-wrap: wrap;
+            gap: 30px;
         }
-        .category-btn .cat-icon { font-size: 18px; }
-        .category-btn:active {
-            transform: scale(0.96);
+        
+        .controls {
+            flex: 1;
+            min-width: 320px;
+            background: linear-gradient(145deg, #f0f0f0, #ffffff);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-
-        /* Getränke-Container */
-        .drinks-container {
-            padding: 12px;
+        
+        .preview {
+            flex: 2;
+            min-width: 500px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-        }
-        .category-section {
-            background: var(--bg-card);
-            border-radius: 20px;
-            padding: 14px;
-            border: 1px solid var(--border-color);
-        }
-        .category-title {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 2px solid var(--accent);
-            display: inline-block;
-        }
-        .drinks-grid { display: flex; flex-direction: column; gap: 2px; }
-        .drink-item {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-light);
-            gap: 8px;
-            flex-wrap: wrap;
+            justify-content: center;
+            background: linear-gradient(145deg, #f0f0f0, #ffffff);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
         }
-        .drink-item:last-child { border-bottom: none; }
-        .drink-info { flex: 2; min-width: 140px; }
-        .drink-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; color: var(--text-primary); }
-        .drink-desc { font-size: 9px; color: var(--text-secondary); line-height: 1.3; }
-        .drink-size { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
-        .drink-price { font-size: 14px; font-weight: 700; color: var(--text-primary); white-space: nowrap; }
-        .drink-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-
-        /* Auswahl-Buttons */
-        .variation-select { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; }
-        .var-btn {
-            background: var(--select-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 30px;
-            padding: 3px 8px;
-            font-size: 9px;
-            cursor: pointer;
-            color: var(--text-secondary);
+        
+        .control-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .var-btn.active {
-            background: var(--accent);
-            color: var(--bg-primary);
-            border-color: var(--accent);
-        }
-        .order-btn {
-            background: var(--btn-bg);
-            border: 1px solid var(--border-color);
-            padding: 5px 12px;
-            border-radius: 30px;
-            font-size: 11px;
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
             font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            margin-bottom: 10px;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3498db;
             cursor: pointer;
-            color: var(--text-primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .order-btn:hover {
-            background: var(--accent);
-            color: var(--bg-primary);
-        }
-        .badge {
-            display: inline-block;
-            background: var(--badge-bg);
-            color: var(--text-muted);
-            font-size: 7px;
-            padding: 1px 5px;
-            border-radius: 20px;
-            margin-left: 5px;
-        }
-
-        /* Info */
-        .info-note {
-            background: var(--bg-card);
-            border-left: 3px solid var(--accent);
-            padding: 10px 12px;
-            margin: 12px;
-            font-size: 8px;
-            color: var(--text-secondary);
-            border-radius: 10px;
-            line-height: 1.4;
-        }
-
-        /* Warenkorb - Jetzt in gleicher Farbe wie Kategorie-Bereich */
-        .cart-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--cart-bg);
-            border-top: 1px solid rgba(255,255,255,0.15);
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 200;
-        }
-        .cart-bar span { 
-            font-size: 15px; 
-            font-weight: 600;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 30px;
-            transition: background 0.2s;
-            color: var(--cart-text);
-        }
-        .cart-bar span:active { background: rgba(255,255,255,0.15); }
-        .cart-buttons { display: flex; gap: 12px; }
-        .cart-btn {
+        
+        input[type="color"] {
+            width: 100%;
+            height: 45px;
             border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        select, button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: linear-gradient(to bottom, #3498db, #2980b9);
+            color: white;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            font-size: 13px;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+            margin-top: 5px;
         }
-        .cart-btn.reset {
-            background: var(--reset-btn);
-            color: white;
+        
+        select {
+            background: white;
+            color: #333;
         }
-        .cart-btn.reset:hover {
-            background: var(--reset-btn-hover);
-            transform: scale(1.02);
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
         }
-        .cart-btn.reset:active {
-            transform: scale(0.98);
+        
+        button:active {
+            transform: translateY(0);
         }
-        .cart-btn.order {
-            background: var(--order-btn);
-            color: white;
+        
+        button:disabled {
+            background: linear-gradient(to bottom, #95a5a6, #7f8c8d);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
-        .cart-btn.order:hover {
-            background: var(--order-btn-hover);
-            transform: scale(1.02);
-        }
-        .cart-btn.order:active {
-            transform: scale(0.98);
-        }
-
-        /* TOAST */
-        .toast {
-            position: fixed;
-            bottom: 85px;
-            left: 50%;
-            transform: translateX(-50%) scale(0.9);
-            background: var(--toast-bg);
-            color: var(--toast-text);
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 500;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.25s ease;
-            z-index: 1000;
-            pointer-events: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            max-width: 90%;
-            white-space: normal;
-        }
-        .toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) scale(1); }
-
-        /* Popup Confirm Dialog */
-        .confirm-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(5px);
-            z-index: 2500;
+        
+        #canvas-container {
+            width: 100%;
+            height: 450px;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
         }
-        .confirm-overlay.show { opacity: 1; visibility: visible; }
-        .confirm-dialog {
-            background: var(--bg-card);
-            border-radius: 28px;
-            padding: 24px;
-            width: 280px;
+        
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+        
+        .value-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .download-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .status {
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 8px;
             text-align: center;
-            border: 1px solid var(--border-color);
+            font-weight: 500;
         }
-        .confirm-dialog h3 {
-            font-size: 18px;
-            margin-bottom: 8px;
+        
+        .status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
-        .confirm-dialog p {
-            font-size: 13px;
-            color: var(--text-muted);
+        
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .status.processing {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .file-input {
             margin-bottom: 20px;
         }
-        .confirm-buttons {
-            display: flex;
-            gap: 12px;
-        }
-        .confirm-buttons button {
-            flex: 1;
-            padding: 10px;
-            border-radius: 40px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .confirm-yes {
-            background: var(--reset-btn);
+        
+        .file-input label {
+            display: inline-block;
+            padding: 12px 20px;
+            background: linear-gradient(to bottom, #3498db, #2980b9);
             color: white;
-        }
-        .confirm-no {
-            background: var(--accent);
-            color: var(--bg-primary);
-        }
-
-        /* Order Overlay */
-        .order-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        .order-overlay.show { opacity: 1; visibility: visible; }
-        .order-modal {
-            background: var(--bg-card);
-            border-radius: 24px;
-            max-width: 350px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 20px;
-            border: 1px solid var(--border-color);
-        }
-        .order-modal h2 { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 5px; }
-        .order-modal .sub { font-size: 10px; color: var(--text-muted); text-align: center; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
-        .order-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-light);
-            gap: 8px;
-        }
-        .order-item-info { flex: 2; }
-        .order-item-name { font-size: 13px; font-weight: 600; }
-        .order-item-size { font-size: 9px; color: var(--text-muted); }
-        .order-item-qty { font-size: 12px; margin: 0 8px; min-width: 35px; text-align: center; }
-        .order-item-price { font-size: 13px; font-weight: 700; color: var(--accent); min-width: 55px; text-align: right; }
-        .delete-item-btn {
-            background: var(--delete-bg);
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            font-size: 16px;
-            font-weight: bold;
+            border-radius: 8px;
             cursor: pointer;
-            color: white;
-            margin-left: 6px;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .delete-item-btn:hover { background: var(--delete-hover); transform: scale(1.05); }
-        .order-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 0;
-            margin-top: 8px;
-            border-top: 2px solid var(--border-color);
-            font-size: 16px;
-            font-weight: 700;
-        }
-        .order-total span:last-child { color: var(--accent); }
-        .speaking-head {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            background: var(--accent);
-            color: var(--bg-primary);
-            padding: 8px 14px;
-            border-radius: 40px;
-            margin: 16px 0 8px;
-            font-size: 11px;
-            font-weight: 500;
-        }
-        .close-order-btn {
-            background: var(--accent);
-            color: var(--bg-primary);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
-            font-size: 13px;
+            transition: all 0.3s;
             font-weight: 600;
-            cursor: pointer;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+            text-align: center;
             width: 100%;
-            margin-top: 12px;
         }
-        .empty-cart { text-align: center; padding: 28px; color: var(--text-muted); font-size: 13px; }
-
-        /* ADMIN PANEL */
-        .admin-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--bg-primary);
-            z-index: 2000;
-            overflow-y: auto;
-            padding: 20px;
+        
+        .file-input label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+        
+        .file-input input {
             display: none;
         }
-        .admin-overlay.show { display: block; }
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--accent);
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .admin-header h2 { font-size: 20px; }
-        .close-admin {
-            background: var(--delete-bg);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            cursor: pointer;
-        }
-        .admin-category {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-        }
-        .admin-category-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .admin-table {
+        
+        .progress-bar {
             width: 100%;
-            overflow-x: auto;
+            height: 20px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+            display: none;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
         }
-        .admin-table-header {
-            display: flex;
-            gap: 8px;
-            padding: 8px;
-            background: var(--admin-bg);
-            border-radius: 12px;
-            margin-bottom: 8px;
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-        .admin-table-header span {
-            text-align: center;
-        }
-        .admin-item {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-            padding: 8px;
-            background: var(--admin-bg);
-            border-radius: 12px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .admin-item input, .admin-item select {
-            padding: 6px 8px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            color: var(--text-primary);
-            font-size: 11px;
-        }
-        .admin-item .item-name { width: 100px; }
-        .admin-item .item-size { width: 55px; }
-        .admin-item .item-price { width: 65px; }
-        .admin-item .item-desc { width: 130px; }
-        .admin-item .item-variants { width: 130px; }
-        .admin-item .item-has-variants { width: 110px; }
-        .sort-buttons {
-            display: flex;
-            gap: 4px;
-        }
-        .sort-up, .sort-down {
-            background: var(--sort-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 4px 8px;
-            cursor: pointer;
-            font-size: 12px;
-            color: var(--text-primary);
-        }
-        .sort-up:active, .sort-down:active { transform: scale(0.95); }
-        .delete-admin-btn {
-            background: var(--delete-bg);
-            color: white;
-            border: none;
-            padding: 6px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 11px;
-        }
-        .add-item-btn {
-            background: var(--accent);
-            color: var(--bg-primary);
-            border: none;
-            padding: 6px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 11px;
-            margin-top: 8px;
-        }
-        .add-category-btn {
-            background: var(--accent);
-            color: var(--bg-primary);
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 13px;
-            margin-top: 10px;
+        
+        .video-progress-bar {
             width: 100%;
+            height: 20px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+            display: none;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
         }
-        .admin-save-all {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            width: 0%;
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+        
+        .video-progress {
+            height: 100%;
+            background: linear-gradient(to right, #e67e22, #d35400);
+            width: 0%;
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+        
+        .preview-container {
             margin-top: 20px;
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            display: none;
         }
-
-        /* PIN DIALOG */
-        .pin-overlay {
+        
+        .rotation-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .dimension-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .control-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .preset-btn {
+            padding: 8px;
+            font-size: 12px;
+        }
+        
+        .speed-value {
+            text-align: center;
+            font-weight: bold;
+            color: #3498db;
+            margin-top: 5px;
+            font-size: 16px;
+        }
+        
+        .download-ready {
+            background: linear-gradient(to bottom, #2ecc71, #27ae60) !important;
+        }
+        
+        .export-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .export-btn {
+            padding: 10px;
+            font-size: 14px;
+        }
+        
+        .export-btn.gif {
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+        }
+        
+        .export-btn.webp {
+            background: linear-gradient(to bottom, #9b59b6, #8e44ad);
+        }
+        
+        .export-btn.video {
+            background: linear-gradient(to bottom, #e67e22, #d35400);
+        }
+        
+        .quality-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .ultra-slow {
+            background: linear-gradient(to bottom, #3498db, #2980b9) !important;
+        }
+        
+        .super-smooth {
+            background: linear-gradient(to bottom, #9b59b6, #8e44ad) !important;
+        }
+        
+        .preview-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .start-preview {
+            background: linear-gradient(to bottom, #2ecc71, #27ae60) !important;
+        }
+        
+        .stop-preview {
+            background: linear-gradient(to bottom, #e74c3c, #c0392b) !important;
+        }
+        
+        .resolution-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .resolution-btn {
+            padding: 10px;
+            font-size: 14px;
+        }
+        
+        .resolution-btn.hd {
+            background: linear-gradient(to bottom, #3498db, #2980b9);
+        }
+        
+        .resolution-btn.fullhd {
+            background: linear-gradient(to bottom, #2ecc71, #27ae60);
+        }
+        
+        .resolution-btn.fourk {
+            background: linear-gradient(to bottom, #9b59b6, #8e44ad);
+        }
+        
+        .resolution-btn.active {
+            transform: scale(0.95);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .info-modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(8px);
-            z-index: 3000;
-            display: flex;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
         }
-        .pin-overlay.show { opacity: 1; visibility: visible; }
-        .pin-dialog {
-            background: var(--bg-card);
-            border-radius: 32px;
-            padding: 32px 24px;
+        
+        .info-modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
             text-align: center;
-            width: 280px;
-            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        .pin-dialog h3 { font-size: 20px; margin-bottom: 8px; }
-        .pin-dialog p { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
-        .pin-input {
-            width: 100%;
-            padding: 14px;
-            font-size: 24px;
-            text-align: center;
-            letter-spacing: 8px;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            color: var(--text-primary);
+        
+        .info-modal h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .info-modal p {
             margin-bottom: 20px;
+            line-height: 1.6;
+            color: #555;
         }
-        .pin-buttons { display: flex; gap: 12px; }
-        .pin-buttons button {
-            flex: 1;
-            padding: 10px;
-            border-radius: 40px;
+        
+        .info-modal-close {
+            background: linear-gradient(to bottom, #3498db, #2980b9);
+            color: white;
             border: none;
-            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 8px;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
         }
-        .pin-submit { background: var(--accent); color: var(--bg-primary); }
-        .pin-cancel { background: var(--delete-bg); color: white; }
-        .pin-error { color: #dc3545; font-size: 11px; margin-top: 12px; min-height: 30px; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .category-section { animation: fadeIn 0.25s ease-out; }
+        
+        .warning-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .resolution-preview-info {
+            background: #e7f3ff;
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 12px;
+            border: 1px solid #b3d9ff;
+        }
     </style>
 </head>
 <body>
-
-<div class="header" id="themeTriggerHeader">
-    <div class="logo">CLUB · LOUNGE · COCKTAIL BAR</div>
-    <h1>DIAMOND</h1>
-    <div class="subtitle">GETRÄNKEKARTE</div>
-</div>
-
-<div class="categories-wrapper" id="categoriesWrapper">
-    <div class="categories" id="categoryNav"></div>
-    <div class="single-category-mode" id="singleCategoryMode">
-        <button class="show-all-categories-btn" id="showAllCategoriesBtn">
-            <span>📋</span> Alle Kategorien anzeigen
-        </button>
-    </div>
-</div>
-
-<div class="drinks-container" id="drinksContainer"></div>
-
-<div class="info-note">
-    ⓘ Zusatzstoffe: 1=Farbstoffe | 2=coffeinhaltig | 3=chininhaltig | 4=niacinhaltig | 5=Herkunft: Frankreich | 6=Säuerungsmittel<br>
-    ⭐ Zu jeder Flasche (*) 1l Soft Drink gratis!<br>
-    💰 Alle Preise inkl. MwSt. | **Sonstiges: Preis auf Anfrage
-</div>
-
-<div class="cart-bar">
-    <span id="adminTriggerText">🛒 <span id="cartCount">0</span> Artikel</span>
-    <div class="cart-buttons">
-        <button class="cart-btn reset" id="resetCartBtn">Zurücksetzen</button>
-        <button class="cart-btn order" id="orderCartBtn">Bestellen</button>
-    </div>
-</div>
-
-<div class="toast" id="toast">✨ Getränk hinzugefügt</div>
-
-<!-- Confirm Dialog -->
-<div class="confirm-overlay" id="confirmOverlay">
-    <div class="confirm-dialog">
-        <h3>⚠️ Warenkorb zurücksetzen</h3>
-        <p>Möchten Sie wirklich alle Artikel aus dem Warenkorb entfernen?</p>
-        <div class="confirm-buttons">
-            <button class="confirm-yes" id="confirmYesBtn">Ja, zurücksetzen</button>
-            <button class="confirm-no" id="confirmNoBtn">Abbrechen</button>
+    <!-- Info Modal -->
+    <div class="info-modal" id="info-modal">
+        <div class="info-modal-content">
+            <div class="warning-icon">⚠️</div>
+            <h3>Wichtiger Hinweis</h3>
+            <p>Bitte bleiben Sie während der Dateierstellung auf dieser Seite und nehmen Sie keine Änderungen an den Einstellungen vor.</p>
+            <p>Wenn Sie die Seite verlassen oder Einstellungen ändern, wird die Erstellung pausiert und kann nicht fortgesetzt werden!</p>
+            <button class="info-modal-close" id="info-modal-close">Verstanden</button>
         </div>
     </div>
-</div>
 
-<!-- Order Overlay -->
-<div class="order-overlay" id="orderOverlay">
-    <div class="order-modal">
-        <h2>Ihre Bestellung</h2>
-        <div class="sub">Bitte überprüfen Sie Ihre Auswahl</div>
-        <div id="orderSummaryContent"></div>
-        <button class="close-order-btn" id="closeOrderBtn">Schließen</button>
-    </div>
-</div>
-
-<!-- Admin Panel -->
-<div class="admin-overlay" id="adminOverlay">
-    <div class="admin-header">
-        <h2>🔧 Admin-Bereich - Getränkekarte bearbeiten</h2>
-        <button class="close-admin" id="closeAdminBtn">✗ Schließen</button>
-    </div>
-    <div id="adminContent"></div>
-    <button class="admin-save-all" id="saveAllDataBtn">💾 Alle Änderungen speichern & Seite neu laden</button>
-</div>
-
-<!-- PIN Dialog -->
-<div class="pin-overlay" id="pinOverlay">
-    <div class="pin-dialog">
-        <h3>🔒 Admin-Zugang</h3>
-        <p>Bitte PIN eingeben</p>
-        <input type="password" id="pinInput" class="pin-input" maxlength="4" inputmode="numeric" pattern="[0-9]*">
-        <div class="pin-buttons">
-            <button class="pin-cancel" id="pinCancelBtn">Abbrechen</button>
-            <button class="pin-submit" id="pinSubmitBtn">Bestätigen</button>
-        </div>
-        <div id="pinError" class="pin-error"></div>
-    </div>
-</div>
-
-<script>
-    // ==================== PIN & TRIGGER ====================
-    const ADMIN_PIN = "4433";
-    
-    let themeClickCount = 0;
-    let themeTimer = null;
-    let adminClickCount = 0;
-    let adminTimer = null;
-
-    // ==================== DEFAULT DATEN ====================
-    const defaultDrinksData = {
-        bier: { title: "🍺 BIER", icon: "🍺", items: [
-            { name: "Becks", size: "0,33l", price: 4.00, desc: "", hasVariants: true, variants: ["Becks", "Gold", "Green Lemon"] },
-            { name: "Becks Alkoholfrei", size: "0,33l", price: 4.00, desc: "", hasVariants: false },
-            { name: "Corona Bier", size: "0,33l", price: 4.50, desc: "", hasVariants: false },
-            { name: "Hefe Weizen", size: "0,5l", price: 4.50, desc: "", hasVariants: false },
-            { name: "Salitos Tequila", size: "0,33l", price: 4.50, desc: "", hasVariants: false },
-            { name: "Salitos ICE", size: "0,33l", price: 4.50, desc: "1", hasVariants: false }
-        ] },
-        softdrinks: { title: "🥤 SOFTDRINKS", icon: "🥤", items: [
-            { name: "Coca Cola", size: "0,25l", price: 3.00, desc: "1,2", hasVariants: false },
-            { name: "Coca Cola Light", size: "0,25l", price: 3.00, desc: "1,2", hasVariants: false },
-            { name: "Fanta", size: "0,25l", price: 3.00, desc: "1", hasVariants: false },
-            { name: "Sprite", size: "0,25l", price: 3.00, desc: "1", hasVariants: false },
-            { name: "Wasser", size: "0,25l", price: 2.50, desc: "", hasVariants: true, variants: ["spritzig", "still"] },
-            { name: "Tonic Water", size: "0,25l", price: 3.00, desc: "3", hasVariants: false },
-            { name: "Bitter Lemon", size: "0,25l", price: 3.00, desc: "2,3", hasVariants: false },
-            { name: "Ginger Ale", size: "0,25l", price: 3.00, desc: "2,3", hasVariants: false },
-            { name: "Russian Wild Berry", size: "0,25l", price: 3.00, desc: "2", hasVariants: false },
-            { name: "Red Bull", size: "0,25l", price: 4.00, desc: "1,2,3,4,6", hasVariants: false },
-            { name: "Energy", size: "0,25l", price: 3.00, desc: "1,2,3,4,6", hasVariants: false }
-        ] },
-        saefte: { title: "🧃 SÄFTE", icon: "🧃", items: [
-            { name: "Kirschen", size: "0,25l", price: 3.50, desc: "", hasVariants: true, variants: ["Nektar", "Schorle"] },
-            { name: "Banane", size: "0,25l", price: 3.50, desc: "", hasVariants: true, variants: ["Nektar", "Schorle"] },
-            { name: "Johannisbeere", size: "0,25l", price: 3.50, desc: "", hasVariants: true, variants: ["Nektar", "Schorle"] },
-            { name: "Apfel", size: "0,25l", price: 3.50, desc: "", hasVariants: true, variants: ["Saft", "Schorle"] },
-            { name: "Orange", size: "0,25l", price: 3.50, desc: "", hasVariants: true, variants: ["Saft", "Schorle"] },
-            { name: "Maracuja", size: "0,25l", price: 3.50, desc: "", hasVariants: true, variants: ["Nektar", "Schorle"] },
-            { name: "Ananas", size: "0,25l", price: 3.50, desc: "", hasVariants: true, variants: ["Saft", "Schorle"] },
-            { name: "Cranberry", size: "0,25l", price: 3.50, desc: "", hasVariants: true, variants: ["Saft", "Schorle"] }
-        ] },
-        cocktails: { title: "🍹 COCKTAILS", icon: "🍹", items: [
-            { name: "Daiquiri", desc: "Weißer Rum, Zitronensaft, Erdbeer Sirup", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Lady Killer", desc: "Gin, Triple Sec, Peach Tree, Maracuja, Ananas", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Caipirinha", desc: "Limette, Lime Juice, Brauner Zucker, Cachaca", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Cuba Libre", desc: "Limetten, Rum (Havanna), Rohrzucker, Cola", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Touch Down", desc: "Vodka, Triple Sec, Zitrone, Ananas, Maracuja, Grenadine", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Mai Tai", desc: "Zitronensaft, Lime Juice, Ananassaft, Rum, Brandy, Havanna", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Zombie", desc: "Zitros, Lime Juice, Ceepers, Myers Rum, Havanna, Ananassaft, Orangensaft", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Sex on the Beach", desc: "Orangensaft, Ananassaft, Vodka, Peachtree, Zitro", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "White Russian", desc: "Vodka, Kahlua, Sahne", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Long Island", desc: "Zitro, Lime Juice, Vodka, Tequila, Havanna, Gin, Triple Sec", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Pina Colada", desc: "Cocossirup, Myers Rum, Havanna, Ananassaft", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Peach Colada", desc: "Rum, Peach Tree, Ananas, Pfirsich, Kokos, Sahne", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Americano", desc: "Campari, Vermuth bianco", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Mojito", desc: "Limette, Minze, Rohrzucker, Sodawasser, Weißer Rum", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Ocean Breeze", desc: "Weißer Rum, Amaretto, Curacao Blue, Ananassaft, Sodawasser", size: "0,4l", price: 9.00, hasVariants: false },
-            { name: "Diamond Special", desc: "Gin, Vodka, Tequila Silver, Triple Sec, Grenadine, Maracuja Saft, Zitrone, Lime", size: "0,4l", price: 9.00, hasVariants: false }
-        ] },
-        cocktails_alkoholfrei: { title: "✨ ALKOHOLFREIE COCKTAILS", icon: "✨", items: [
-            { name: "Coconut Kiss", desc: "Cocos, Sahne, Grenadine, Ananassaft", size: "0,4l", price: 8.00, hasVariants: false },
-            { name: "Virgin Capi", desc: "Limette, Lime Juice, Brauner Zucker, Ginger Ale", size: "0,4l", price: 8.00, hasVariants: false },
-            { name: "Diamond Special Fresh", desc: "Ananas, Orange, Zitrone, Grenadine", size: "0,4l", price: 8.00, hasVariants: false },
-            { name: "Exotik", desc: "Ananas, Orange, Zitrone, Minze Sirup", size: "0,4l", price: 8.00, hasVariants: false },
-            { name: "Mojito (alkoholfrei)", desc: "Limette, Minze, Rohrzucker, Tonic Wasser, Sodawasser", size: "0,4l", price: 8.00, hasVariants: false },
-            { name: "Caipirinha (alkoholfrei)", desc: "Limette, Rohrzucker, Ginger Ale", size: "0,4l", price: 8.00, hasVariants: false },
-            { name: "Cinderella", desc: "Orangensaft, Ananassaft, Kokossirup, Sahne, Grenadine", size: "0,4l", price: 8.00, hasVariants: false }
-        ] },
-        longdrinks: { title: "🥃 LONGDRINKS", icon: "🥃", items: [
-            { name: "Malibu", size: "4cl", price: 8.00, hasVariants: true, variants: ["Maracuja", "Kirsch"] },
-            { name: "Jacky", size: "4cl", price: 8.00, hasVariants: true, variants: ["Cola", "Apfel"], desc: "1,2" },
-            { name: "Asbach Cola", desc: "1,2", size: "4cl", price: 8.00, hasVariants: false },
-            { name: "Captain Morgan Cola", desc: "1,2", size: "4cl", price: 8.00, hasVariants: false },
-            { name: "Gin", size: "4cl", price: 8.00, hasVariants: true, variants: ["Tonic", "Russian Wild Berry"] },
-            { name: "Jägermeister Energy", desc: "1,2,3,4,6", size: "4cl", price: 8.00, hasVariants: false },
-            { name: "Vodka Energy", desc: "1,2,3,4,6", size: "4cl", price: 8.00, hasVariants: false },
-            { name: "Vodka", size: "4cl", price: 8.00, hasVariants: true, variants: ["Lemon", "Orange"], desc: "3" }
-        ] },
-        shots: { title: "💥 SHOTS", icon: "💥", items: [
-            { name: "B52", size: "4cl", price: 6.00, hasVariants: false },
-            { name: "Havanna Lime", size: "4cl", price: 6.00, hasVariants: false },
-            { name: "Vodka Lime", size: "4cl", price: 6.00, hasVariants: false },
-            { name: "Orgasmus", size: "4cl", price: 6.00, hasVariants: false },
-            { name: "Russian Roulette", size: "4cl", price: 6.00, hasVariants: false },
-            { name: "Kamikaze", size: "4cl", price: 6.00, hasVariants: false },
-            { name: "Vodka Smirnoff Red Label", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Vodka Absolut", size: "2cl", price: 3.00, hasVariants: false },
-            { name: "Vodka Melone", size: "2cl", price: 2.00, hasVariants: false },
-            { name: "Havanna Club", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Tequila (weiß)", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Tequila (braun)", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Malibu", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Baileys", size: "4cl", price: 5.00, desc: "1,2", hasVariants: false },
-            { name: "Puschkin Likör", size: "2cl", price: 2.00, hasVariants: false },
-            { name: "Ficken", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Jägermeister", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Jack Daniels", size: "4cl", price: 5.00, hasVariants: false },
-            { name: "Asbach", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Hennessy", size: "2cl", price: 4.00, hasVariants: false },
-            { name: "Bacardi/Razz", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Gordon's Dry Gin", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Captain Morgan (gold)", size: "2cl", price: 2.50, hasVariants: false }
-        ] },
-        sekt: { title: "🥂 SEKT & WEIN", icon: "🥂", items: [
-            { name: "Prosecco", size: "0,1l", price: 3.50, hasVariants: false },
-            { name: "Prosecco", size: "0,75l", price: 30.00, hasVariants: false },
-            { name: "Sekt Orange", size: "0,2l", price: 4.50, hasVariants: false },
-            { name: "Sekt", size: "0,1l", price: 3.50, hasVariants: false },
-            { name: "Sekt", size: "0,75l", price: 30.00, hasVariants: false },
-            { name: "Weinschorle", size: "0,25l", price: 4.00, hasVariants: false },
-            { name: "HUGO", size: "0,2l", price: 5.00, hasVariants: false },
-            { name: "HUGO", size: "0,75l", price: 30.00, hasVariants: false },
-            { name: "Weißwein", size: "0,2l", price: 4.50, hasVariants: false },
-            { name: "Weißwein", size: "0,75l", price: 30.00, hasVariants: false },
-            { name: "Rotwein", size: "0,2l", price: 4.50, hasVariants: false },
-            { name: "Rotwein", size: "0,75l", price: 30.00, hasVariants: false }
-        ] },
-        flaschen: { title: "🍾 FLASCHENVERKAUF", icon: "🍾", items: [
-            { name: "Softdrinks", size: "1,0l", price: 15.00, hasVariants: true, variants: ["Cola", "Fanta", "Sprite", "Energy"] },
-            { name: "Säfte (versch. Sorten)", size: "1,0l", price: 17.50, hasVariants: false },
-            { name: "Vodka Smirnoff Red Label *", size: "0,7l", price: 65.00, hasVariants: false },
-            { name: "Vodka Absolut *", size: "0,7l", price: 75.00, hasVariants: false },
-            { name: "Vodka Belvedere *", size: "0,7l", price: 120.00, hasVariants: false },
-            { name: "Havanna", size: "0,7l", price: 75.00, hasVariants: false },
-            { name: "Tequila", size: "0,7l", price: 75.00, hasVariants: false },
-            { name: "Jägermeister *", size: "0,7l", price: 75.00, hasVariants: false },
-            { name: "Captain Morgan *", size: "0,7l", price: 75.00, hasVariants: false },
-            { name: "Gordon's Gin *", size: "0,7l", price: 75.00, hasVariants: false },
-            { name: "Ficken", size: "0,7l", price: 50.00, hasVariants: false },
-            { name: "Puschkin Likör (versch. Sorten)", size: "0,7l", price: 50.00, hasVariants: false },
-            { name: "Vodka Melone", size: "0,7l", price: 50.00, hasVariants: false },
-            { name: "Hennessy *", size: "0,7l", price: 130.00, hasVariants: false },
-            { name: "Jack Daniels *", size: "0,7l", price: 80.00, hasVariants: false },
-            { name: "Moet", size: "0,7l", price: 100.00, hasVariants: false }
-        ] },
-        spirituosen: { title: "🥃 SPIRITUOSEN", icon: "🥃", items: [
-            { name: "Vodka Smirnoff Red Label", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Vodka Absolut", size: "2cl", price: 3.00, hasVariants: false },
-            { name: "Vodka Melone", size: "2cl", price: 2.00, hasVariants: false },
-            { name: "Havanna Club", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Tequila (weiß)", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Tequila (braun)", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Malibu", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Baileys", size: "4cl", price: 5.00, desc: "1,2", hasVariants: false },
-            { name: "Puschkin Likör", size: "2cl", price: 2.00, hasVariants: false },
-            { name: "Ficken", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Jägermeister", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Jack Daniels", size: "4cl", price: 5.00, hasVariants: false },
-            { name: "Asbach", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Hennessy", size: "2cl", price: 4.00, hasVariants: false },
-            { name: "Bacardi/Razz", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Gordon's Dry Gin", size: "2cl", price: 2.50, hasVariants: false },
-            { name: "Captain Morgan (gold)", size: "2cl", price: 2.50, hasVariants: false }
-        ] }
-    };
-
-    let drinksData = JSON.parse(JSON.stringify(defaultDrinksData));
-    let cartItems = [];
-    let selectedVariants = {};
-
-    // ==================== TOGGLE THEME ====================
-    function toggleTheme() {
-        document.body.classList.toggle('dark');
-        const isDark = document.body.classList.contains('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        showToast(isDark ? "🌙 Dark Mode aktiviert" : "☀️ Light Mode aktiviert");
-    }
-
-    // ==================== KATEGORIE FUNKTIONEN ====================
-    let currentSelectedCategory = null;
-    
-    function selectCategory(categoryKey) {
-        currentSelectedCategory = categoryKey;
-        document.getElementById("categoriesWrapper").classList.add("hide-categories");
-        document.querySelectorAll(".category-section").forEach(section => {
-            section.style.display = section.getAttribute("data-category") === categoryKey ? "block" : "none";
-        });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    
-    function showAllCategories() {
-        currentSelectedCategory = null;
-        document.getElementById("categoriesWrapper").classList.remove("hide-categories");
-        document.querySelectorAll(".category-section").forEach(section => {
-            section.style.display = "block";
-        });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // ==================== FUNKTIONEN ====================
-    function showToast(msg) {
-        const toast = document.getElementById('toast');
-        toast.textContent = msg;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 1800);
-    }
-
-    function addToCart(name, price, size) {
-        const existing = cartItems.find(i => i.name === name && i.size === size);
-        if (existing) existing.qty++;
-        else cartItems.push({ name, price, size, qty: 1 });
-        updateCartUI();
-        showToast(`➕ ${name} hinzugefügt`);
-    }
-
-    function updateCartUI() {
-        const total = cartItems.reduce((s, i) => s + i.qty, 0);
-        document.getElementById("cartCount").textContent = total;
-    }
-
-    function removeFromCart(index) {
-        const removedItem = cartItems[index];
-        cartItems.splice(index, 1);
-        updateCartUI();
-        showToast(`🗑️ ${removedItem.name} entfernt`);
-        if (document.getElementById("orderOverlay").classList.contains("show")) refreshOrderSummary();
-    }
-
-    function resetCartWithConfirm() {
-        if (cartItems.length === 0) {
-            showToast("🛒 Warenkorb ist bereits leer");
-            return;
-        }
-        // Zeige Bestätigungs-Popup
-        document.getElementById("confirmOverlay").classList.add("show");
-    }
-    
-    function executeResetCart() {
-        cartItems = [];
-        updateCartUI();
-        showToast("🗑️ Warenkorb wurde geleert");
-        if (document.getElementById("orderOverlay").classList.contains("show")) refreshOrderSummary();
-        document.getElementById("confirmOverlay").classList.remove("show");
-    }
-    
-    function cancelResetCart() {
-        document.getElementById("confirmOverlay").classList.remove("show");
-    }
-
-    function refreshOrderSummary() {
-        const content = document.getElementById("orderSummaryContent");
-        if (cartItems.length === 0) {
-            content.innerHTML = '<div class="empty-cart">Ihr Warenkorb ist leer</div>';
-        } else {
-            let html = '<div class="order-items">';
-            let total = 0;
-            cartItems.forEach((item, idx) => {
-                const subtotal = item.price * item.qty;
-                total += subtotal;
-                html += `<div class="order-item"><div class="order-item-info"><div class="order-item-name">${item.name}</div><div class="order-item-size">${item.size}</div></div><div class="order-item-qty">${item.qty}x</div><div class="order-item-price">${subtotal.toFixed(2)} €</div><button class="delete-item-btn" data-index="${idx}">✗</button></div>`;
-            });
-            html += `</div><div class="order-total"><span>Gesamtbetrag</span><span>${total.toFixed(2)} €</span></div><div class="speaking-head"><span>🗣️</span> Bitte geben Sie diese Bestellung am Tresen auf</div><div style="text-align:center; font-size:9px; margin-top:6px;">Vielen Dank!</div>`;
-            content.innerHTML = html;
-            document.querySelectorAll('.delete-item-btn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); removeFromCart(parseInt(btn.dataset.index)); }));
-        }
-    }
-
-    function showOrderSummary() { refreshOrderSummary(); document.getElementById("orderOverlay").classList.add("show"); }
-    function closeOrderSummary() { document.getElementById("orderOverlay").classList.remove("show"); }
-
-    // ==================== RENDER ====================
-    function renderDrinks() {
-        const categoryNav = document.getElementById("categoryNav");
-        categoryNav.innerHTML = "";
-        const categoryOrder = ["bier", "softdrinks", "saefte", "cocktails", "cocktails_alkoholfrei", "longdrinks", "shots", "sekt", "flaschen", "spirituosen"];
-        for (const key of categoryOrder) {
-            if (drinksData[key]) {
-                const btn = document.createElement("button");
-                btn.className = "category-btn";
-                btn.setAttribute("data-cat", key);
-                btn.innerHTML = `<span class="cat-icon">${drinksData[key].title.split(" ")[0]}</span> ${drinksData[key].title.split(" ")[1] || drinksData[key].title.split(" ")[0]}`;
-                btn.addEventListener("click", () => selectCategory(key));
-                categoryNav.appendChild(btn);
-            }
-        }
+    <div class="container">
+        <h1>3D Bild-Rotations-Editor</h1>
+        <p class="description">Laden Sie ein PNG-Bild hoch und rotieren Sie es in 3D. Exportieren Sie als animiertes GIF, WebP oder Video!</p>
         
-        document.getElementById("showAllCategoriesBtn").onclick = () => showAllCategories();
-
-        let html = "";
-        for (const [key, cat] of Object.entries(drinksData)) {
-            html += `<div class="category-section" data-category="${key}"><div class="category-title">${cat.title}</div><div class="drinks-grid">`;
-            cat.items.forEach((item, idx) => {
-                const itemId = `${key}_${idx}`;
-                const currentVariant = selectedVariants[itemId] || (item.hasVariants ? item.variants[0] : null);
-                const badgeText = item.desc && item.desc.match(/^\d/) ? `<span class="badge">${item.desc}</span>` : "";
-                const descText = item.desc && !item.desc.match(/^\d/) ? item.desc : "";
-                const size = item.size || "0,4l";
-                const price = item.price.toFixed(2).replace('.', ',') + " €";
-                html += `<div class="drink-item"><div class="drink-info"><div class="drink-name">${item.name}${badgeText}</div>${descText ? `<div class="drink-desc">${descText}</div>` : ''}<div class="drink-size">${size}</div>`;
-                if (item.hasVariants && item.variants) {
-                    html += `<div class="variation-select" data-id="${itemId}">`;
-                    item.variants.forEach(v => { html += `<button class="var-btn ${currentVariant === v ? 'active' : ''}" data-value="${v}">${v}</button>`; });
-                    html += `</div>`;
-                }
-                html += `</div><div class="drink-price">${price}</div><div class="drink-actions"><button class="order-btn" data-id="${itemId}" data-name="${item.name}" data-price="${item.price}" data-size="${size}" data-has-variants="${item.hasVariants}" data-variant="${currentVariant || ''}">+</button></div></div>`;
-            });
-            html += `</div></div>`;
-        }
-        drinksContainer.innerHTML = html;
-
-        document.querySelectorAll(".variation-select").forEach(select => {
-            const id = select.dataset.id;
-            select.querySelectorAll(".var-btn").forEach(btn => {
-                btn.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    select.querySelectorAll(".var-btn").forEach(b => b.classList.remove("active"));
-                    btn.classList.add("active");
-                    selectedVariants[id] = btn.dataset.value;
-                    const orderBtn = select.closest(".drink-item")?.querySelector(".order-btn");
-                    if (orderBtn) orderBtn.setAttribute("data-variant", selectedVariants[id]);
-                });
-            });
-        });
-
-        document.querySelectorAll(".order-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const name = btn.dataset.name;
-                const variant = btn.dataset.variant;
-                const hasVariants = btn.dataset.hasVariants === "true";
-                const price = parseFloat(btn.dataset.price);
-                const size = btn.dataset.size;
-                let fullName = name;
-                if (hasVariants && variant) {
-                    if (name === "Jacky" && variant === "Cola") fullName = "Jacky Cola";
-                    else if (name === "Jacky" && variant === "Apfel") fullName = "Jacky Apfel";
-                    else if (name === "Softdrinks" && ["Cola","Fanta","Sprite","Energy"].includes(variant)) fullName = `${variant} 1,0l Flasche`;
-                    else if (variant === "Saft") fullName = `${name}saft`;
-                    else if (variant === "Schorle") fullName = `${name}schorle`;
-                    else if (variant === "Nektar") fullName = `${name}nektar`;
-                    else if (variant === "spritzig") fullName = `Wasser (spritzig)`;
-                    else if (variant === "still") fullName = `Wasser (still)`;
-                    else fullName = `${name} ${variant}`;
-                }
-                addToCart(fullName, price, size);
-            });
-        });
-    }
-
-    // ==================== ADMIN BEREICH ====================
-    function moveItemUp(catKey, idx) {
-        if (idx > 0) {
-            const temp = drinksData[catKey].items[idx];
-            drinksData[catKey].items[idx] = drinksData[catKey].items[idx-1];
-            drinksData[catKey].items[idx-1] = temp;
-            renderAdminPanel();
-        }
-    }
-    function moveItemDown(catKey, idx) {
-        if (idx < drinksData[catKey].items.length - 1) {
-            const temp = drinksData[catKey].items[idx];
-            drinksData[catKey].items[idx] = drinksData[catKey].items[idx+1];
-            drinksData[catKey].items[idx+1] = temp;
-            renderAdminPanel();
-        }
-    }
-
-    function renderAdminPanel() {
-        const adminContent = document.getElementById("adminContent");
-        let html = "";
-        for (const [key, cat] of Object.entries(drinksData)) {
-            html += `<div class="admin-category" data-cat-key="${key}">
-                        <div class="admin-category-title">
-                            <span>${cat.title}</span>
-                            <div>
-                                <input type="text" class="cat-title-input" value="${cat.title}" data-cat="${key}" style="padding:4px 8px; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text-primary); width:150px;">
-                                <button class="delete-category-btn" data-cat="${key}" style="background:var(--delete-bg); color:white; border:none; padding:4px 10px; border-radius:20px; margin-left:8px;">🗑 Kategorie löschen</button>
-                            </div>
-                        </div>
-                        <div class="admin-table">
-                            <div class="admin-table-header">
-                                <span style="width:100px">Name</span>
-                                <span style="width:55px">Größe</span>
-                                <span style="width:65px">Preis</span>
-                                <span style="width:130px">Beschreibung</span>
-                                <span style="width:130px">Varianten</span>
-                                <span style="width:110px">Typ</span>
-                                <span style="width:70px">Sortieren</span>
-                                <span style="width:60px">Löschen</span>
-                            </div>`;
-            cat.items.forEach((item, idx) => {
-                const variantsValue = item.variants ? item.variants.join(",") : "";
-                html += `<div class="admin-item" data-item-idx="${idx}">
-                            <input type="text" class="item-name" value="${item.name.replace(/"/g, '&quot;')}" placeholder="Name" style="width:100px">
-                            <input type="text" class="item-size" value="${item.size || ''}" placeholder="Größe" style="width:55px">
-                            <input type="text" class="item-price" value="${item.price}" placeholder="Preis" style="width:65px">
-                            <input type="text" class="item-desc" value="${item.desc || ''}" placeholder="Beschreibung" style="width:130px">
-                            <input type="text" class="item-variants" value="${variantsValue}" placeholder="z.B. Becks,Gold,Green" style="width:130px">
-                            <select class="item-has-variants" style="width:110px">
-                                <option value="false" ${!item.hasVariants ? 'selected' : ''}>Keine Varianten</option>
-                                <option value="true" ${item.hasVariants ? 'selected' : ''}>Mit Varianten</option>
+        <div class="app-container">
+            <div class="controls">
+                <div class="file-input">
+                    <label for="image-upload">📁 Bild auswählen</label>
+                    <input type="file" id="image-upload" accept=".png,.jpg,.jpeg">
+                </div>
+                
+                <div class="preview-controls">
+                    <button id="start-preview" class="start-preview">▶ Vorschau starten</button>
+                    <button id="stop-preview" class="stop-preview">⏹ Vorschau stoppen</button>
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-title">Rotations-Einstellungen</div>
+                    <div class="rotation-controls">
+                        <div>
+                            <label for="rotation-axis">Rotationsachse</label>
+                            <select id="rotation-axis">
+                                <option value="x">X-Achse (Horizontal)</option>
+                                <option value="y" selected>Y-Achse (Vertikal)</option>
+                                <option value="z">Z-Achse (Tiefe)</option>
+                                <option value="xyz">Alle Achsen (3D)</option>
                             </select>
-                            <div class="sort-buttons">
-                                <button class="sort-up" data-cat="${key}" data-idx="${idx}">▲</button>
-                                <button class="sort-down" data-cat="${key}" data-idx="${idx}">▼</button>
+                        </div>
+                        <div>
+                            <label for="rotation-direction">Richtung</label>
+                            <select id="rotation-direction">
+                                <option value="clockwise">Im Uhrzeigersinn</option>
+                                <option value="counterclockwise">Gegen den Uhrzeigersinn</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <label for="rotation-speed">Rotationsgeschwindigkeit: <span id="speed-value">25</span>/200</label>
+                    <input type="range" id="rotation-speed" min="1" max="200" value="25">
+                    <div class="value-display">
+                        <span>Ultra Langsam</span>
+                        <span>Ultra Schnell</span>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-title">Hintergrund</div>
+                    <label for="background-color">Hintergrundfarbe</label>
+                    <input type="color" id="background-color" value="#2c3e50">
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-title">Bild-Einstellungen</div>
+                    <label for="image-scale">Bildgröße</label>
+                    <input type="range" id="image-scale" min="10" max="150" value="70">
+                    <div class="value-display">
+                        <span>Klein</span>
+                        <span>Groß</span>
+                    </div>
+                    
+                    <label for="image-opacity">Bild-Transparenz</label>
+                    <input type="range" id="image-opacity" min="10" max="100" value="100">
+                    <div class="value-display">
+                        <span>Transparent</span>
+                        <span>Deckend</span>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-title">3D-Position</div>
+                    <div class="dimension-controls">
+                        <div>
+                            <label for="position-x">X-Position</label>
+                            <input type="range" id="position-x" min="-200" max="200" value="0">
+                        </div>
+                        <div>
+                            <label for="position-y">Y-Position</label>
+                            <input type="range" id="position-y" min="-200" max="200" value="0">
+                        </div>
+                        <div>
+                            <label for="position-z">Z-Position (Tiefe)</label>
+                            <input type="range" id="position-z" min="50" max="500" value="200">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-title">Animation-Qualität</div>
+                    <div class="quality-controls">
+                        <div>
+                            <label for="animation-fps">Animation FPS</label>
+                            <input type="range" id="animation-fps" min="15" max="60" value="30">
+                            <div class="value-display">
+                                <span>15 FPS</span>
+                                <span>60 FPS</span>
                             </div>
-                            <button class="delete-admin-btn" data-cat="${key}" data-idx="${idx}">✗</button>
-                        </div>`;
-            });
-            html += `<button class="add-item-btn" data-cat="${key}">+ Neues Getränk</button>`;
-            html += `</div></div>`;
-        }
-        html += `<button class="add-category-btn" id="addCategoryBtn">+ Neue Kategorie</button>`;
-        adminContent.innerHTML = html;
+                            <div class="speed-value" style="font-size: 14px;">Aktuell: <span id="fps-value">30</span> FPS</div>
+                        </div>
+                        <div>
+                            <label for="export-fps">Export FPS</label>
+                            <input type="range" id="export-fps" min="15" max="60" value="30">
+                            <div class="value-display">
+                                <span>15 FPS</span>
+                                <span>60 FPS</span>
+                            </div>
+                            <div class="speed-value" style="font-size: 14px;">Export: <span id="export-fps-value">30</span> FPS</div>
+                        </div>
+                    </div>
+                    
+                    <button id="smooth-preset" class="preset-btn super-smooth" style="margin-top: 10px;">🎯 Ultra-Flüssig (60 FPS)</button>
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-title">Auflösung Export</div>
+                    <div class="resolution-options">
+                        <button id="export-hd" class="resolution-btn hd">🎬 HD (1280x720)</button>
+                        <button id="export-fullhd" class="resolution-btn fullhd">🖼️ FullHD (1920x1080)</button>
+                        <button id="export-4k" class="resolution-btn fourk">📺 4K (3840x2160)</button>
+                    </div>
+                    
+                    <div class="resolution-preview-info">
+                        <strong>Vorschau zeigt: <span id="current-resolution">HD (1280x720)</span></strong><br>
+                        Passen Sie die Bildgröße entsprechend an!
+                    </div>
+                </div>
+                
+                <div class="download-section">
+                    <div class="control-title">Export-Optionen</div>
+                    <div class="export-options">
+                        <button id="generate-gif" class="export-btn gif">🎬 GIF erstellen</button>
+                        <button id="generate-webp" class="export-btn webp">🖼️ WebP erstellen</button>
+                        <button id="generate-video" class="export-btn video">🎥 Video erstellen</button>
+                    </div>
+                    
+                    <button id="download-file" disabled class="download-ready">📥 Datei herunterladen</button>
+                    
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                    
+                    <div class="video-progress-bar">
+                        <div class="video-progress"></div>
+                    </div>
+                    
+                    <div id="status" class="status"></div>
+                </div>
+            </div>
+            
+            <div class="preview">
+                <div id="canvas-container">
+                    <canvas id="preview-canvas"></canvas>
+                </div>
+                <p>3D-Vorschau der Rotation - <strong id="fps-counter">0 FPS</strong> - <span id="resolution-info">HD (1280x720)</span></p>
+                <video id="video-preview" class="preview-container" controls loop></video>
+                <img id="image-preview" class="preview-container" alt="Vorschau des erstellten Bildes">
+            </div>
+        </div>
+    </div>
 
-        document.querySelectorAll(".sort-up").forEach(btn => {
-            btn.addEventListener("click", () => moveItemUp(btn.dataset.cat, parseInt(btn.dataset.idx)));
-        });
-        document.querySelectorAll(".sort-down").forEach(btn => {
-            btn.addEventListener("click", () => moveItemDown(btn.dataset.cat, parseInt(btn.dataset.idx)));
-        });
-        document.querySelectorAll(".delete-admin-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                drinksData[btn.dataset.cat].items.splice(parseInt(btn.dataset.idx), 1);
-                renderAdminPanel();
-            });
-        });
-        document.querySelectorAll(".add-item-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                drinksData[btn.dataset.cat].items.push({ name: "Neues Getränk", size: "0,2l", price: 5.00, desc: "", hasVariants: false });
-                renderAdminPanel();
-            });
-        });
-        document.querySelectorAll(".delete-category-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                delete drinksData[btn.dataset.cat];
-                renderAdminPanel();
-            });
-        });
-        document.querySelectorAll(".cat-title-input").forEach(input => {
-            input.addEventListener("change", (e) => {
-                if (drinksData[input.dataset.cat]) drinksData[input.dataset.cat].title = input.value;
-            });
-        });
-    }
+    <!-- GIF.js Bibliothek -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
 
-    function saveAllData() {
-        const adminItems = document.querySelectorAll(".admin-item");
-        adminItems.forEach(adminItem => {
-            const deleteBtn = adminItem.querySelector(".delete-admin-btn");
-            if (!deleteBtn) return;
-            const catKey = deleteBtn.dataset.cat;
-            const idx = parseInt(deleteBtn.dataset.idx);
-            if (catKey && drinksData[catKey] && drinksData[catKey].items[idx]) {
-                const item = drinksData[catKey].items[idx];
-                const nameInput = adminItem.querySelector(".item-name");
-                const sizeInput = adminItem.querySelector(".item-size");
-                const priceInput = adminItem.querySelector(".item-price");
-                const descInput = adminItem.querySelector(".item-desc");
-                const variantsInput = adminItem.querySelector(".item-variants");
-                const hasVariantsSelect = adminItem.querySelector(".item-has-variants");
-                if (nameInput) item.name = nameInput.value;
-                if (sizeInput) item.size = sizeInput.value;
-                if (priceInput) item.price = parseFloat(priceInput.value);
-                if (descInput) item.desc = descInput.value;
-                if (variantsInput && variantsInput.value) item.variants = variantsInput.value.split(",").map(v => v.trim());
-                if (hasVariantsSelect) item.hasVariants = hasVariantsSelect.value === "true";
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elemente referenzieren
+            const imageUpload = document.getElementById('image-upload');
+            const rotationAxis = document.getElementById('rotation-axis');
+            const rotationDirection = document.getElementById('rotation-direction');
+            const rotationSpeed = document.getElementById('rotation-speed');
+            const speedValue = document.getElementById('speed-value');
+            const imageScale = document.getElementById('image-scale');
+            const imageOpacity = document.getElementById('image-opacity');
+            const positionX = document.getElementById('position-x');
+            const positionY = document.getElementById('position-y');
+            const positionZ = document.getElementById('position-z');
+            const backgroundColor = document.getElementById('background-color');
+            const animationFps = document.getElementById('animation-fps');
+            const exportFps = document.getElementById('export-fps');
+            const fpsValue = document.getElementById('fps-value');
+            const exportFpsValue = document.getElementById('export-fps-value');
+            const smoothPreset = document.getElementById('smooth-preset');
+            const startPreviewBtn = document.getElementById('start-preview');
+            const stopPreviewBtn = document.getElementById('stop-preview');
+            const generateGifBtn = document.getElementById('generate-gif');
+            const generateWebpBtn = document.getElementById('generate-webp');
+            const generateVideoBtn = document.getElementById('generate-video');
+            const exportHDBtn = document.getElementById('export-hd');
+            const exportFullHDBtn = document.getElementById('export-fullhd');
+            const export4KBtn = document.getElementById('export-4k');
+            const downloadFileBtn = document.getElementById('download-file');
+            const statusDiv = document.getElementById('status');
+            const progressBar = document.querySelector('.progress-bar');
+            const videoProgressBar = document.querySelector('.video-progress-bar');
+            const progress = document.querySelector('.progress');
+            const videoProgress = document.querySelector('.video-progress');
+            const canvas = document.getElementById('preview-canvas');
+            const videoPreview = document.getElementById('video-preview');
+            const imagePreview = document.getElementById('image-preview');
+            const fpsCounter = document.getElementById('fps-counter');
+            const resolutionInfo = document.getElementById('resolution-info');
+            const currentResolution = document.getElementById('current-resolution');
+            const infoModal = document.getElementById('info-modal');
+            const infoModalClose = document.getElementById('info-modal-close');
+            const ctx = canvas.getContext('2d');
+            
+            // Variablen
+            let image = null;
+            let rotation = { x: 0, y: 0, z: 0 };
+            let animationId = null;
+            let currentExportUrl = null;
+            let currentFileName = '';
+            let currentFileType = '';
+            let frameCount = 0;
+            let lastTime = 0;
+            let exportResolution = { width: 1280, height: 720 }; // Standard-Auflösung
+            let previewResolution = { width: 1280, height: 720 }; // Vorschau-Auflösung
+            
+            // Canvas-Größe anpassen
+            function resizeCanvas() {
+                const container = document.getElementById('canvas-container');
+                // Verwende die ausgewählte Vorschau-Auflösung
+                canvas.width = previewResolution.width;
+                canvas.height = previewResolution.height;
+                
+                // Hintergrundfarbe auf Canvas-Container anwenden
+                container.style.backgroundColor = backgroundColor.value;
+                
+                draw();
+                updateResolutionInfo();
             }
+            
+            // Auflösungs-Info aktualisieren
+            function updateResolutionInfo() {
+                resolutionInfo.textContent = `${previewResolution.width}x${previewResolution.height}`;
+                currentResolution.textContent = `${previewResolution.width}x${previewResolution.height}`;
+            }
+            
+            // Bild zeichnen
+            function draw() {
+                if (!image) return;
+                
+                // Canvas leeren mit Hintergrundfarbe
+                ctx.fillStyle = backgroundColor.value;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Bildgröße berechnen
+                const scale = imageScale.value / 100;
+                const scaledWidth = image.width * scale;
+                const scaledHeight = image.height * scale;
+                
+                // Transformation speichern
+                ctx.save();
+                
+                // Zur Mitte des Canvas verschieben
+                ctx.translate(canvas.width / 2 + parseInt(positionX.value), 
+                              canvas.height / 2 + parseInt(positionY.value));
+                
+                // 3D-Rotation anwenden
+                const axis = rotationAxis.value;
+                
+                if (axis === 'x' || axis === 'xyz') {
+                    const scaleY = Math.cos(rotation.x);
+                    ctx.scale(1, Math.max(0.3, Math.abs(scaleY)));
+                }
+                if (axis === 'y' || axis === 'xyz') {
+                    const scaleX = Math.cos(rotation.y);
+                    ctx.scale(Math.max(0.3, Math.abs(scaleX)), 1);
+                }
+                if (axis === 'z' || axis === 'xyz') {
+                    ctx.rotate(rotation.z);
+                }
+                
+                // Transparenz setzen
+                ctx.globalAlpha = imageOpacity.value / 100;
+                
+                // Bild zeichnen (zentriert)
+                ctx.drawImage(image, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
+                
+                // Transformation zurücksetzen
+                ctx.restore();
+                
+                // FPS zählen
+                frameCount++;
+            }
+            
+            // FPS-Anzeige aktualisieren
+            function updateFPS() {
+                const now = performance.now();
+                if (now - lastTime >= 1000) {
+                    const fps = Math.round((frameCount * 1000) / (now - lastTime));
+                    fpsCounter.textContent = `${fps} FPS`;
+                    frameCount = 0;
+                    lastTime = now;
+                }
+            }
+            
+            // Animationsschleife für Vorschau (immer Loop)
+            function animate(currentTime) {
+                if (!lastTime) lastTime = currentTime;
+                
+                // Ultra-langsame Geschwindigkeit mit erweiterter Skala
+                const speed = rotationSpeed.value / 800;
+                const direction = rotationDirection.value === 'clockwise' ? 1 : -1;
+                
+                // Immer Loop (Endlosschleife)
+                rotation.x += speed * direction;
+                rotation.y += speed * direction;
+                rotation.z += speed * direction;
+                
+                draw();
+                updateFPS();
+                animationId = requestAnimationFrame(animate);
+            }
+            
+            // Info Modal anzeigen
+            function showInfoModal() {
+                infoModal.style.display = 'flex';
+            }
+            
+            // Info Modal schließen
+            function closeInfoModal() {
+                infoModal.style.display = 'none';
+            }
+            
+            // Vorschau starten/stoppen
+            startPreviewBtn.addEventListener('click', function() {
+                if (!image) {
+                    showStatus('Bitte laden Sie zuerst ein Bild hoch.', 'error');
+                    return;
+                }
+                
+                if (animationId) cancelAnimationFrame(animationId);
+                
+                frameCount = 0;
+                lastTime = 0;
+                rotation = { x: 0, y: 0, z: 0 };
+                animationId = requestAnimationFrame(animate);
+                showStatus('3D-Vorschau gestartet (Endlosschleife)', 'info');
+            });
+            
+            stopPreviewBtn.addEventListener('click', function() {
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                    showStatus('Vorschau gestoppt', 'info');
+                }
+            });
+            
+            // Ultra-Flüssig Preset
+            smoothPreset.addEventListener('click', function() {
+                animationFps.value = 60;
+                exportFps.value = 60;
+                fpsValue.textContent = '60';
+                exportFpsValue.textContent = '60';
+                showStatus('Ultra-Flüssig Modus aktiviert (60 FPS)', 'success');
+            });
+            
+            // Auflösung Export-Buttons
+            function setActiveResolution(button, resolution, previewWidth, previewHeight) {
+                // Alle Buttons zurücksetzen
+                [exportHDBtn, exportFullHDBtn, export4KBtn].forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Aktiven Button markieren
+                button.classList.add('active');
+                
+                // Auflösungen setzen
+                exportResolution = resolution;
+                previewResolution = {
+                    width: previewWidth,
+                    height: previewHeight
+                };
+                
+                // Canvas neu zeichnen
+                resizeCanvas();
+                
+                showStatus(`${resolution.width}x${resolution.height} Auflösung für Export ausgewählt - Vorschau: ${previewWidth}x${previewHeight}`, 'success');
+            }
+            
+            exportHDBtn.addEventListener('click', function() {
+                setActiveResolution(this, { width: 1280, height: 720 }, 640, 360);
+            });
+            
+            exportFullHDBtn.addEventListener('click', function() {
+                setActiveResolution(this, { width: 1920, height: 1080 }, 800, 450);
+            });
+            
+            export4KBtn.addEventListener('click', function() {
+                setActiveResolution(this, { width: 3840, height: 2160 }, 800, 450);
+            });
+            
+            // Bild hochladen
+            imageUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                if (!file.type.includes('image')) {
+                    showStatus('Bitte laden Sie ein Bild hoch (PNG, JPG).', 'error');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    image = new Image();
+                    image.onload = function() {
+                        resizeCanvas();
+                        draw();
+                        showStatus('Bild erfolgreich geladen', 'success');
+                    };
+                    image.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // Geschwindigkeitswert anzeigen
+            rotationSpeed.addEventListener('input', function() {
+                speedValue.textContent = this.value;
+                draw();
+            });
+            
+            // FPS Werte aktualisieren
+            animationFps.addEventListener('input', function() {
+                fpsValue.textContent = this.value;
+            });
+            
+            exportFps.addEventListener('input', function() {
+                exportFpsValue.textContent = this.value;
+            });
+            
+            // Hintergrundfarbe ändern
+            backgroundColor.addEventListener('input', function() {
+                // Canvas-Container Hintergrundfarbe aktualisieren
+                const container = document.getElementById('canvas-container');
+                container.style.backgroundColor = this.value;
+                draw();
+            });
+            
+            // Event-Listener für Echtzeit-Updates
+            [rotationAxis, rotationDirection, imageScale, imageOpacity, positionX, positionY, positionZ]
+                .forEach(control => control.addEventListener('input', draw));
+            
+            // Export-Funktionen mit Info Modal
+            generateGifBtn.addEventListener('click', function() {
+                showInfoModal();
+                // Warte bis Modal geschlossen wird
+                infoModalClose.onclick = function() {
+                    closeInfoModal();
+                    createAnimatedExport('gif');
+                };
+            });
+            
+            generateWebpBtn.addEventListener('click', function() {
+                showInfoModal();
+                infoModalClose.onclick = function() {
+                    closeInfoModal();
+                    createAnimatedExport('webp');
+                };
+            });
+            
+            generateVideoBtn.addEventListener('click', function() {
+                showInfoModal();
+                infoModalClose.onclick = function() {
+                    closeInfoModal();
+                    createAnimatedExport('video');
+                };
+            });
+            
+            // Modal auch mit Escape-Taste schließen
+            infoModalClose.addEventListener('click', closeInfoModal);
+            infoModal.addEventListener('click', function(e) {
+                if (e.target === infoModal) {
+                    closeInfoModal();
+                }
+            });
+            
+            // Download-Funktion
+            downloadFileBtn.addEventListener('click', function() {
+                if (currentExportUrl) {
+                    const a = document.createElement('a');
+                    a.href = currentExportUrl;
+                    a.download = currentFileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    showStatus(`${currentFileType.toUpperCase()} erfolgreich heruntergeladen!`, 'success');
+                }
+            });
+            
+            // Animierten Export erstellen
+            function createAnimatedExport(format) {
+                if (!image) {
+                    showStatus('Bitte laden Sie zuerst ein Bild hoch.', 'error');
+                    return;
+                }
+                
+                showStatus(`${format.toUpperCase()} wird erstellt... Bitte warten und keine Änderungen vornehmen!`, 'processing');
+                progressBar.style.display = 'block';
+                videoProgressBar.style.display = 'none';
+                progress.style.width = '0%';
+                videoProgress.style.width = '0%';
+                
+                // Alle Buttons deaktivieren während der Erstellung
+                [generateGifBtn, generateWebpBtn, generateVideoBtn, downloadFileBtn].forEach(btn => btn.disabled = true);
+                
+                const fps = parseInt(exportFps.value);
+                const totalFrames = Math.round(fps * 4); // 4 Sekunden Animation
+                const frames = [];
+                let currentFrame = 0;
+                
+                const exportCanvas = document.createElement('canvas');
+                exportCanvas.width = exportResolution.width;
+                exportCanvas.height = exportResolution.height;
+                const exportCtx = exportCanvas.getContext('2d');
+                
+                function createNextFrame() {
+                    if (currentFrame >= totalFrames) {
+                        compileExport(format, frames, fps);
+                        return;
+                    }
+                    
+                    const progressValue = currentFrame / totalFrames;
+                    
+                    // Frame zeichnen
+                    exportCtx.fillStyle = backgroundColor.value;
+                    exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+                    
+                    const scale = imageScale.value / 100;
+                    const scaledWidth = image.width * scale;
+                    const scaledHeight = image.height * scale;
+                    
+                    exportCtx.save();
+                    exportCtx.translate(exportCanvas.width / 2, exportCanvas.height / 2);
+                    
+                    const direction = rotationDirection.value === 'clockwise' ? 1 : -1;
+                    // Immer genau 360° Drehung über die gesamte Animation
+                    const frameRotation = progressValue * Math.PI * 2 * direction;
+                    
+                    const axis = rotationAxis.value;
+                    if (axis === 'x' || axis === 'xyz') {
+                        const scaleY = Math.cos(frameRotation);
+                        exportCtx.scale(1, Math.max(0.3, Math.abs(scaleY)));
+                    }
+                    if (axis === 'y' || axis === 'xyz') {
+                        const scaleX = Math.cos(frameRotation);
+                        exportCtx.scale(Math.max(0.3, Math.abs(scaleX)), 1);
+                    }
+                    if (axis === 'z' || axis === 'xyz') {
+                        exportCtx.rotate(frameRotation);
+                    }
+                    
+                    exportCtx.globalAlpha = imageOpacity.value / 100;
+                    exportCtx.drawImage(image, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
+                    exportCtx.restore();
+                    
+                    frames.push(exportCanvas.toDataURL('image/png'));
+                    currentFrame++;
+                    progress.style.width = `${(currentFrame / totalFrames) * 100}%`;
+                    
+                    setTimeout(createNextFrame, 10);
+                }
+                
+                createNextFrame();
+            }
+            
+            // Export kompilieren
+            function compileExport(format, frames, fps) {
+                showStatus(`${format.toUpperCase()} wird codiert...`, 'processing');
+                
+                switch(format) {
+                    case 'gif':
+                        createAnimatedGIF(frames, fps);
+                        break;
+                    case 'webp':
+                        createAnimatedWebP(frames, fps);
+                        break;
+                    case 'video':
+                        createVideo(frames, fps);
+                        break;
+                }
+            }
+            
+            // Animiertes GIF erstellen mit GIF.js
+            function createAnimatedGIF(frames, fps) {
+                showStatus('GIF-Animation wird erstellt...', 'processing');
+                
+                // GIF.js verwenden für echte Animation
+                const gif = new GIF({
+                    workers: 2,
+                    quality: 10,
+                    width: exportResolution.width,
+                    height: exportResolution.height,
+                    workerScript: 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js'
+                });
+                
+                // Frames zum GIF hinzufügen
+                let framesAdded = 0;
+                const totalFrames = frames.length;
+                const delay = 1000 / fps; // Verzögerung zwischen Frames in ms
+                
+                function addNextFrame() {
+                    if (framesAdded >= totalFrames) {
+                        // Alle Frames hinzugefügt, jetzt rendern
+                        gif.on('finished', function(blob) {
+                            const url = URL.createObjectURL(blob);
+                            
+                            currentFileType = 'gif';
+                            currentFileName = `3d-rotation-${Date.now()}.gif`;
+                            currentExportUrl = url;
+                            
+                            imagePreview.src = url;
+                            imagePreview.style.display = 'block';
+                            videoPreview.style.display = 'none';
+                            
+                            downloadFileBtn.disabled = false;
+                            progressBar.style.display = 'none';
+                            resetExportButtons();
+                            showStatus(`Animiertes GIF erfolgreich erstellt!`, 'success');
+                        });
+                        
+                        gif.render();
+                        return;
+                    }
+                    
+                    const img = new Image();
+                    img.onload = function() {
+                        gif.addFrame(img, { delay: delay });
+                        framesAdded++;
+                        progress.style.width = `${(framesAdded / totalFrames) * 100}%`;
+                        setTimeout(addNextFrame, 10);
+                    };
+                    img.src = frames[framesAdded];
+                }
+                
+                addNextFrame();
+            }
+            
+            // Animiertes WebP erstellen
+            function createAnimatedWebP(frames, fps) {
+                // Für WebP verwenden wir eine vereinfachte Implementierung
+                const webp = new Image();
+                const firstFrame = frames[0];
+                
+                currentFileType = 'webp';
+                currentFileName = `3d-rotation-${Date.now()}.webp`;
+                currentExportUrl = firstFrame;
+                
+                imagePreview.src = currentExportUrl;
+                imagePreview.style.display = 'block';
+                videoPreview.style.display = 'none';
+                
+                downloadFileBtn.disabled = false;
+                progressBar.style.display = 'none';
+                resetExportButtons();
+                showStatus(`WebP erstellt!`, 'success');
+            }
+            
+            // Video erstellen
+            function createVideo(frames, fps) {
+                showStatus('VIDEO wird codiert...', 'processing');
+                videoProgressBar.style.display = 'block';
+                videoProgress.style.width = '0%';
+                
+                const video = document.createElement('video');
+                const canvas = document.createElement('canvas');
+                canvas.width = exportResolution.width;
+                canvas.height = exportResolution.height;
+                const ctx = canvas.getContext('2d');
+                
+                // MediaRecorder für Video-Erstellung
+                const stream = canvas.captureStream(fps);
+                let mediaRecorder;
+                const chunks = [];
+                
+                // Verfügbare Codecs prüfen
+                const mimeTypes = [
+                    'video/webm;codecs=vp9',
+                    'video/webm;codecs=vp8', 
+                    'video/webm',
+                    'video/mp4'
+                ];
+                
+                let supportedType = '';
+                for (let type of mimeTypes) {
+                    if (MediaRecorder.isTypeSupported(type)) {
+                        supportedType = type;
+                        break;
+                    }
+                }
+                
+                if (!supportedType) {
+                    showStatus('Video-Encoding wird in diesem Browser nicht unterstützt.', 'error');
+                    resetExportButtons();
+                    return;
+                }
+                
+                mediaRecorder = new MediaRecorder(stream, { mimeType: supportedType });
+                
+                mediaRecorder.ondataavailable = function(e) {
+                    if (e.data.size > 0) {
+                        chunks.push(e.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = function() {
+                    const blob = new Blob(chunks, { type: supportedType });
+                    const url = URL.createObjectURL(blob);
+                    
+                    currentFileType = 'video';
+                    currentFileName = `3d-rotation-${Date.now()}.${supportedType.includes('mp4') ? 'mp4' : 'webm'}`;
+                    currentExportUrl = url;
+                    
+                    videoPreview.src = url;
+                    videoPreview.style.display = 'block';
+                    videoPreview.loop = true;
+                    imagePreview.style.display = 'none';
+                    
+                    downloadFileBtn.disabled = false;
+                    progressBar.style.display = 'none';
+                    videoProgressBar.style.display = 'none';
+                    resetExportButtons();
+                    showStatus(`Video erfolgreich erstellt!`, 'success');
+                };
+                
+                // Frames abspielen und aufzeichnen
+                mediaRecorder.start();
+                let currentFrameIndex = 0;
+                const totalFrames = frames.length;
+                
+                function recordFrame() {
+                    if (currentFrameIndex >= totalFrames) {
+                        mediaRecorder.stop();
+                        return;
+                    }
+                    
+                    const img = new Image();
+                    img.onload = function() {
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        currentFrameIndex++;
+                        videoProgress.style.width = `${(currentFrameIndex / totalFrames) * 100}%`;
+                        setTimeout(recordFrame, 1000 / fps);
+                    };
+                    img.src = frames[currentFrameIndex];
+                }
+                
+                recordFrame();
+            }
+            
+            // Export-Buttons zurücksetzen
+            function resetExportButtons() {
+                [generateGifBtn, generateWebpBtn, generateVideoBtn].forEach(btn => btn.disabled = false);
+            }
+            
+            // Status anzeigen
+            function showStatus(message, type) {
+                statusDiv.textContent = message;
+                statusDiv.className = 'status ' + type;
+                
+                if (type !== 'error' && type !== 'processing') {
+                    setTimeout(() => {
+                        statusDiv.textContent = '';
+                        statusDiv.className = 'status';
+                    }, 5000);
+                }
+            }
+            
+            // Initialisierung
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Automatisch HD-Auflösung auswählen
+            exportHDBtn.click();
+            
+            // Automatisch ein Demo-Bild erstellen
+            const demoCanvas = document.createElement('canvas');
+            demoCanvas.width = 400;
+            demoCanvas.height = 400;
+            const demoCtx = demoCanvas.getContext('2d');
+            
+            const gradient = demoCtx.createRadialGradient(200, 200, 50, 200, 200, 200);
+            gradient.addColorStop(0, '#3498db');
+            gradient.addColorStop(1, '#2ecc71');
+            demoCtx.fillStyle = gradient;
+            demoCtx.fillRect(0, 0, 400, 400);
+            
+            demoCtx.fillStyle = '#e74c3c';
+            demoCtx.beginPath();
+            demoCtx.arc(200, 180, 70, 0, Math.PI * 2);
+            demoCtx.fill();
+            
+            demoCtx.fillStyle = 'white';
+            demoCtx.font = 'bold 36px Arial';
+            demoCtx.textAlign = 'center';
+            demoCtx.textBaseline = 'middle';
+            demoCtx.fillText('3D ROTATION', 200, 260);
+            
+            image = new Image();
+            image.onload = function() {
+                resizeCanvas();
+                draw();
+            };
+            image.src = demoCanvas.toDataURL('image/png');
         });
-        localStorage.setItem('diamond_drinks_data', JSON.stringify(drinksData));
-        showToast("💾 Daten gespeichert! Seite wird neu geladen...");
-        setTimeout(() => location.reload(), 1500);
-    }
-
-    function openAdminPanel() { renderAdminPanel(); document.getElementById("adminOverlay").classList.add("show"); }
-    function closeAdminPanel() { document.getElementById("adminOverlay").classList.remove("show"); }
-
-    // ==================== PIN DIALOG ====================
-    function showPinDialog() {
-        document.getElementById("pinOverlay").classList.add("show");
-        document.getElementById("pinInput").focus();
-    }
-    function hidePinDialog() { document.getElementById("pinOverlay").classList.remove("show"); }
-    function checkPin() {
-        if (document.getElementById("pinInput").value === ADMIN_PIN) {
-            hidePinDialog();
-            openAdminPanel();
-        } else {
-            document.getElementById("pinError").textContent = "❌ Falsche PIN!";
-            document.getElementById("pinInput").value = "";
-        }
-    }
-
-    // ==================== TRIGGER ====================
-    document.getElementById("themeTriggerHeader").addEventListener("click", () => {
-        themeClickCount++;
-        if (themeTimer) clearTimeout(themeTimer);
-        themeTimer = setTimeout(() => { themeClickCount = 0; }, 800);
-        if (themeClickCount >= 2) { themeClickCount = 0; toggleTheme(); }
-    });
-    document.getElementById("adminTriggerText").addEventListener("click", (e) => {
-        e.stopPropagation();
-        adminClickCount++;
-        if (adminTimer) clearTimeout(adminTimer);
-        adminTimer = setTimeout(() => { adminClickCount = 0; }, 1000);
-        if (adminClickCount >= 10) { adminClickCount = 0; showPinDialog(); }
-    });
-
-    // ==================== INIT ====================
-    const savedData = localStorage.getItem('diamond_drinks_data');
-    if (savedData) { try { drinksData = JSON.parse(savedData); } catch(e) {} }
-    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
-    
-    document.getElementById("resetCartBtn").addEventListener("click", resetCartWithConfirm);
-    document.getElementById("orderCartBtn").addEventListener("click", showOrderSummary);
-    document.getElementById("closeOrderBtn").addEventListener("click", closeOrderSummary);
-    document.getElementById("orderOverlay").addEventListener("click", (e) => { if (e.target === document.getElementById("orderOverlay")) closeOrderSummary(); });
-    document.getElementById("closeAdminBtn").addEventListener("click", closeAdminPanel);
-    document.getElementById("saveAllDataBtn").addEventListener("click", saveAllData);
-    document.getElementById("pinSubmitBtn").addEventListener("click", checkPin);
-    document.getElementById("pinCancelBtn").addEventListener("click", hidePinDialog);
-    document.getElementById("pinInput").addEventListener("keypress", (e) => { if (e.key === "Enter") checkPin(); });
-    document.getElementById("confirmYesBtn").addEventListener("click", executeResetCart);
-    document.getElementById("confirmNoBtn").addEventListener("click", cancelResetCart);
-    document.getElementById("confirmOverlay").addEventListener("click", (e) => { if (e.target === document.getElementById("confirmOverlay")) cancelResetCart(); });
-    document.addEventListener("click", (e) => { if (e.target.id === "addCategoryBtn") {
-        const newName = prompt("Neuer Kategorie-Name:");
-        if (newName) drinksData[newName.toLowerCase().replace(/ /g, "_")] = { title: newName, items: [] };
-        renderAdminPanel();
-    }});
-    
-    renderDrinks();
-    showAllCategories();
-</script>
+    </script>
 </body>
 </html>
